@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สื่อการเรียนรู้โต้ตอบ: ความเท่ากันทุกประการ (Congruence)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white py-6 px-4 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="bg-indigo-500 text-indigo-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">วิทย์-คณิต สารสาสน์พิทยา</span>
+            <h1 class="text-3xl font-bold mt-2">สื่อการเรียนรู้โต้ตอบ: ความเท่ากันทุกประการ</h1>
+            <p class="text-indigo-100 text-sm mt-1">ระดับชั้นมัธยมศึกษาตอนต้น (ม.ต้น)</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 gap-6 grid grid-cols-1">
+
+        <!-- Objective Card -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h2 class="text-lg font-bold text-indigo-700 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                วัตถุประสงค์การเรียนรู้
+            </h2>
+            <p class="text-slate-600 text-sm">
+                นักเรียนสามารถบอกได้ว่ารูปสามเหลี่ยมสองรูปเท่ากันทุกประการหรือไม่ โดยสังเกตจากการทับกันได้สนิทพอดีเมื่อมีขนาดความยาวด้านและขนาดของมุมที่สอดคล้องกัน
+            </p>
+        </div>
+
+        <!-- Interactive Playground -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Controls (1 col on desktop) -->
+            <div class="flex flex-col justify-between space-y-4">
+                <div>
+                    <h3 class="font-bold text-slate-700 text-base mb-4 border-b pb-2">ปรับค่าตัวแปร (Interactive Sliders)</h3>
+                    
+                    <!-- Slider 1 -->
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            ตัวแปร 1: ความยาวฐาน (Base)
+                        </label>
+                        <input type="range" id="baseSlider" min="100" max="200" value="150" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>สั้น (100 px)</span>
+                            <span id="baseValue" class="font-semibold text-indigo-600">150 px</span>
+                            <span>ยาว (200 px)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2 -->
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            ตัวแปร 2: มุมยอด (Apex Angle)
+                        </label>
+                        <input type="range" id="angleSlider" min="30" max="120" value="60" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>แหลม ($30^\circ$)</span>
+                            <span id="angleValue" class="font-semibold text-indigo-600">$60^\circ$</span>
+                            <span>ป้าน ($120^\circ$)</span>
+                        </div>
+                    </div>
+
+                    <!-- Overlay Checkbox -->
+                    <div class="pt-2">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="overlayCheck" class="sr-only peer" checked>
+                            <div class="relative w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <span class="ms-3 text-sm font-medium text-slate-700">ย้ายรูปมาทับกันเพื่อพิสูจน์</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Live Status -->
+                <div id="statusBox" class="p-3 rounded-lg text-center font-medium text-sm bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    รูปทั้งสองเท่ากันทุกประการ ($\Delta ABC \cong \Delta DEF$)
+                </div>
+            </div>
+
+            <!-- Canvas Viewport (2 cols on desktop) -->
+            <div class="md:col-span-2 flex flex-col items-center justify-center">
+                <canvas id="interactiveCanvas" width="500" height="320" class="w-full border border-slate-200"></canvas>
+                <div class="flex items-center space-x-6 mt-3 text-xs text-slate-500">
+                    <div class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block mr-1"></span> รูปสามเหลี่ยม $ABC$</div>
+                    <div class="flex items-center"><span class="w-3 h-3 bg-rose-500 rounded-full inline-block mr-1"></span> รูปสามเหลี่ยม $DEF$</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Quiz -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+            <h2 class="text-xl font-bold text-slate-800 border-b pb-3">แบบประเมินความรู้ท้ายกิจกรรม (3 ข้อ)</h2>
+
+            <!-- Question 1 -->
+            <div class="space-y-2">
+                <p class="font-medium text-slate-700">1. รูปสามเหลี่ยมสองรูปจะ **เท่ากันทุกประการ** ก็ต่อเมื่อตรงกับเงื่อนไขใด?</p>
+                <div class="space-y-1 text-sm pl-2">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q1" value="A" class="accent-indigo-600">
+                        <span>ก. มีพื้นที่เท่ากันเท่านั้น</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q1" value="B" class="accent-indigo-600">
+                        <span>ข. สามารถเคลื่อนที่ไปทับกันได้สนิทพอดี</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q1" value="C" class="accent-indigo-600">
+                        <span>ค. มีขนาดมุมเท่ากัน 3 มุม แต่ความยาวด้านไม่เท่ากัน</span>
+                    </label>
+                </div>
+                <div id="ans1" class="hidden text-xs mt-2 p-2 rounded bg-slate-100"></div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-2">
+                <p class="font-medium text-slate-700">2. จากการทดลองปรับ Sliders ข้างต้น หากเปลี่ยนค่า "ความยาวฐาน" ของรูปหนึ่ง แต่ไม่เปลี่ยนอีกรูปหนึ่ง ผลจะเป็นอย่างไร?</p>
+                <div class="space-y-1 text-sm pl-2">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q2" value="A" class="accent-indigo-600">
+                        <span>ก. รูปทั้งสองยังคงเท่ากันทุกประการ</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q2" value="B" class="accent-indigo-600">
+                        <span>ข. รูปทั้งสองไม่เท่ากันทุกประการ เพราะขนาดและความยาวด้านสมอ้างไม่เท่ากัน</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q2" value="C" class="accent-indigo-600">
+                        <span>ค. สรุปไม่ได้จนกว่าจะวัดขนาดมุมทั้งหมด</span>
+                    </label>
+                </div>
+                <div id="ans2" class="hidden text-xs mt-2 p-2 rounded bg-slate-100"></div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-2">
+                <p class="font-medium text-slate-700">3. ข้อใดต่อไปนี้ **ไม่ใช่** ความสัมพันธ์แบบเท่ากันทุกประการของรูปสามเหลี่ยม?</p>
+                <div class="space-y-1 text-sm pl-2">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q3" value="A" class="accent-indigo-600">
+                        <span>ก. ด้าน-ด้าน-ด้าน (ด.ด.ด.)</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q3" value="B" class="accent-indigo-600">
+                        <span>ข. มุม-ด้าน-มุม (ม.ด.ม.)</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="q3" value="C" class="accent-indigo-600">
+                        <span>ค. มุม-มุม-มุม (ม.ม.ม.)</span>
+                    </label>
+                </div>
+                <div id="ans3" class="hidden text-xs mt-2 p-2 rounded bg-slate-100"></div>
+            </div>
+
+            <button onclick="checkQuiz()" class="w-full md:w-auto px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition duration-150">
+                ส่งคำตอบและดูเฉลย
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        const canvas = document.getElementById('interactiveCanvas');
+        const ctx = canvas.getContext('2d');
+        const baseSlider = document.getElementById('baseSlider');
+        const angleSlider = document.getElementById('angleSlider');
+        const baseValue = document.getElementById('baseValue');
+        const angleValue = document.getElementById('angleValue');
+        const overlayCheck = document.getElementById('overlayCheck');
+
+        function drawTriangle(x, y, base, angleRad, color, labelPrefix) {
+            const side = base;
+            // Calculate vertex points for isosceles triangle
+            const h = (base / 2) * Math.tan((Math.PI - angleRad) / 2);
+            
+            const p1 = { x: x - base / 2, y: y + h / 2 };
+            const p2 = { x: x + base / 2, y: y + h / 2 };
+            const p3 = { x: x, y: y - h / 2 };
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.closePath();
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.fillStyle = color.replace('1)', '0.15)');
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = "#334155";
+            ctx.font = "bold 13px Sarabun, sans-serif";
+            ctx.fillText(labelPrefix + "1", p1.x - 15, p1.y + 15);
+            ctx.fillText(labelPrefix + "2", p2.x + 5, p2.y + 15);
+            ctx.fillText(labelPrefix + "3", p3.x - 4, p3.y - 10);
+        }
+
+        function render() {
+            const base = parseFloat(baseSlider.value);
+            const angleDeg = parseFloat(angleSlider.value);
+            const angleRad = (angleDeg * Math.PI) / 180;
+            const isOverlay = overlayCheck.checked;
+
+            baseValue.textContent = base + " px";
+            angleValue.innerHTML = `$${angleDeg}^\\circ$`;
+            if (window.MathJax) {
+                MathJax.typesetPromise([angleValue]);
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (isOverlay) {
+                // Draw overlapped at center
+                drawTriangle(canvas.width / 2, canvas.height / 2, base, angleRad, 'rgba(59, 130, 246, 1)', 'A');
+                drawTriangle(canvas.width / 2, canvas.height / 2, base, angleRad, 'rgba(244, 63, 94, 0.7)', 'D');
+            } else {
+                // Draw side-by-side
+                drawTriangle(canvas.width / 4 + 20, canvas.height / 2, base * 0.85, angleRad, 'rgba(59, 130, 246, 1)', 'A');
+                drawTriangle((canvas.width / 4) * 3 - 20, canvas.height / 2, base * 0.85, angleRad, 'rgba(244, 63, 94, 1)', 'D');
+            }
+        }
+
+        baseSlider.addEventListener('input', render);
+        angleSlider.addEventListener('input', render);
+        overlayCheck.addEventListener('change', render);
+
+        // Initial render
+        render();
+
+        // Quiz Logic
+        function checkQuiz() {
+            const answers = { q1: 'B', q2: 'B', q3: 'C' };
+            const explanations = {
+                q1: "ถูกต้อง! รูปสองรูปจะเท่ากันทุกประการก็ต่อเมื่อนำมาทับกันได้สนิทพอดี",
+                q2: "ถูกต้อง! การเปลี่ยนแปลงขนาดของด้านทำให้สามเหลี่ยมทั้งสองมีขนาดไม่เท่ากัน จึงไม่เท่ากันทุกประการ",
+                q3: "ถูกต้อง! มุม-มุม-มุม (ม.ม.ม.) เป็นเพียงเงื่อนไขของ 'รูปสามเหลี่ยมที่คล้ายกัน' แต่ไม่ได้การันตีความเท่ากันทุกประการ"
+            };
+
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                const ansDiv = document.getElementById(`ans${q.slice(-1)}`);
+                ansDiv.classList.remove('hidden');
+
+                if (selected && selected.value === answers[q]) {
+                    ansDiv.className = "text-xs mt-2 p-2 rounded bg-emerald-100 text-emerald-800 font-medium";
+                    ansDiv.innerHTML = `✓ ${explanations[q]}`;
+                } else {
+                    ansDiv.className = "text-xs mt-2 p-2 rounded bg-rose-100 text-rose-800 font-medium";
+                    ansDiv.innerHTML = `✕ ยังไม่ถูกต้อง คำตอบที่ถูกต้องคือข้อ ${answers[q]}`;
+                }
+            }
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    </script>
+</body>
+</html>
